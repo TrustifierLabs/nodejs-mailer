@@ -1,0 +1,10 @@
+version: '2'
+services:
+        node-env:
+                build:
+                        context: .
+                        dockerfile: Dockerfile
+                ports:
+                        - "2222:22"
+                volumes:
+                        - ./app:/app
