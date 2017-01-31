@@ -1,4 +1,4 @@
-FROM dfars-kit/ssh
+FROM trustifier-labs/ssh
 LABEL 	author.name="Ahmed Masud" \
 	author.email="ahmed.masud@trustifier.com"  \
 	version="v0.0.1"
