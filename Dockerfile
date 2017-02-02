@@ -10,7 +10,7 @@ RUN yum -y -q install nodejs
 RUN curl -L -o /etc/yum.repos.d/yarn.repo https://dl.yarnpkg.com/rpm/yarn.repo
 RUN yum -y -q install yarn
 RUN yum install -y gcc-c++ make
-ENV USERNAME=masud
+ENV USERNAME=pigeons
 ADD ./id_rsa.pub /tmp
 RUN /srv/start.sh ${USERNAME}
 
