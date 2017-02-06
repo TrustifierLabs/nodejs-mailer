@@ -6,9 +6,12 @@ const mt = new MailTransporter({
 	// the json file that gmail sends you, which 
 	// contains the authentication tokens and the private key
 	// for 2LO xoauth
-	authFile: 'foo.json'
+	authFile: 'good-creds.json',
 });
 
-mt.authenticate()
-	.then((resolve) => console.log("I am authenticated: ", resolve))
-	.catch((reject) => console.log("I got rejected: ", reject));
+mt.sendMail({
+	from: '"Ahmed Masud" <ahmed.masud@trustifier.com>', 
+	to: "ahmed.masud@trustifier.com", 
+	subject: "hi there you!",
+	text: "well how goes it? -- don't forget to write back"
+  });
