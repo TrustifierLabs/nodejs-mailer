@@ -40,7 +40,7 @@ Replace &lt;*YOURDOMAIN*&gt; in any of the instructions below with your ACTUAL d
  
 3. add which services this new service account can actually play with at:
 
-	https://admin.google.com/<YOURDOMAIN>/ManageOauthClients
+	https://admin.google.com/&lt;YOURDOMAIN&gt;/ManageOauthClients
  
    e.g. in our case we want to send out emails on behalf of our users, so we will add
    the gmail service as one of the APIs we can access through the service account.
