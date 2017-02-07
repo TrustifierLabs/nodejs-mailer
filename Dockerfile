@@ -15,3 +15,4 @@ ADD ./id_rsa.pub /tmp
 RUN /srv/start.sh ${USERNAME}
 
 VOLUME [ "/app" ]
+VOLUME [ "/etc/security/google-api" ]
