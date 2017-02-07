@@ -98,7 +98,7 @@ In order to actually have it work, you do need to send an email out. Append the 
 
 the `sendMail` method takes takes all options from [nodemailer message configuration](http://nodemailer.com/message/)
 
-For details on how this is done with (nodemailer)[http://nodemailer.com/] check out [lib/mail-transporter.js](lib/mail-transporter.js)
+For details on how this is done with [nodemailer](http://nodemailer.com/) check out [lib/mail-transporter.js](lib/mail-transporter.js)
 
 
 
