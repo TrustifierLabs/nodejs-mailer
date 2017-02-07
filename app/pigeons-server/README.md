@@ -71,10 +71,31 @@ Replace &lt;*YOURDOMAIN*&gt; in any of the instructions below with your ACTUAL d
 		// the json file that gmail sends you, which 
 		// contains the authentication tokens and the private key
 		// for 2LO xoauth
-		authFile: 'my-service-creds.json'
+		authFile: '/etc/security/google-api/my-service-creds.json'
 	});
 
 ```
 
-   Here `my-service-creds.json` is the JSON file that you got from google.
+   Here `/etc/security/google-api/my-service-creds.json` is the JSON file that you got from google, and
+   put OUTSIDE the app tree right? :-)
+
+
+If all goes well you should be able to run the `node foo.js` where `foo.js` contains 
+the script listed above and it should run like a charm and not do ANYTHING :-)
+
+In order to actually have it work, you do need to send an email out. Append the following snippet:
+
+
+```javascript
+	mt.sendMail({
+		from: '"Your Name" <your.name@trustifier.com>', 
+		to: "someone@somewhere.com", 
+		subject: "hi there you!",
+		text: "well how goes it? -- don't forget to write back"
+  	});
+
+```
+
+sendMail takes all options from [nodemailer message configuration](http://nodemailer.com/message/)
+
    
