@@ -19,7 +19,7 @@ google.
 
 Replace &lt;*YOURDOMAIN*&gt; in any of the instructions below with your ACTUAL domain. :-)
 
-## The Steps to get going:
+## Quickish steps to get going:
 
 1. set-up a service account in google using your domain administrator account,
 
@@ -60,7 +60,7 @@ Replace &lt;*YOURDOMAIN*&gt; in any of the instructions below with your ACTUAL d
    3.2 and use *https://mail.google.com/* in the "**One or More API Scopes**" field.
 
 
-4. Now to pass the credentials to pigeons-mailer, you can simply do something like:
+4. Now to pass the credentials to pigeons-server, you can simply do something like:
 
 ```javascript
 	'use strict';
@@ -96,6 +96,6 @@ In order to actually have it work, you do need to send an email out. Append the 
 
 ```
 
-sendMail takes all options from [nodemailer message configuration](http://nodemailer.com/message/)
+the `sendMail` method takes takes all options from [nodemailer message configuration](http://nodemailer.com/message/)
 
-   
+ 
