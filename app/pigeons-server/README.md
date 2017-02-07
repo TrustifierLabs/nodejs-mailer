@@ -10,7 +10,9 @@ In this particular case, i.e. pigeons-server, we are interested in sending
 emails on behalf of users within our domain using 2LO OAuth2 authentication.
 
 Whilst [nodemailer](https://github.com/nodemailer/nodemailer) is capabile of handling
-this situation, it is not documented.
+this situation, it is not documented. So here is a really poorly written QuickStart
+on how to get 2LO OAuth2 google domain service account set up and connected to 
+[nodemailer](https://github.com/nodemailer/nodemailer)
 
 ## Before you begin
 
@@ -98,7 +100,8 @@ In order to actually have it work, you do need to send an email out. Append the 
 
 the `sendMail` method takes takes all options from [nodemailer message configuration](http://nodemailer.com/message/)
 
-For details on how this is done with [nodemailer](http://nodemailer.com/) check out [lib/mail-transporter.js](lib/mail-transporter.js)
+For details on how this is done with [nodemailer](https://github.com/nodemailer/nodemailer)
+check out [lib/mail-transporter.js](lib/mail-transporter.js)
 
 
 
