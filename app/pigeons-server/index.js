@@ -6,7 +6,7 @@ const mt = new MailTransporter({
 	// the json file that gmail sends you, which 
 	// contains the authentication tokens and the private key
 	// for 2LO xoauth
-	authFile: 'good-creds.json',
+	authFile: '/etc/security/google-api/service-creds.json',
 });
 
 mt.sendMail({
