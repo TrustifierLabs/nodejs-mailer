@@ -32,15 +32,15 @@ Replace &lt;*YOURDOMAIN*&gt; in any of the instructions below with your ACTUAL d
 
 	[See how](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#delegatingauthority)
 
-   this option will allow you to download a JSON or a P12 (legacy/deprecated) 
-   file. Please choose JSON! 
+   * this option will allow you to download a JSON or a P12 (legacy/deprecated) 
+     file. Please choose JSON! 
    
-   Once a public/private key pair is downloaded to your system, keep that file safe.
+   * Once a public/private key pair is downloaded to your system, keep that file safe.
 
-   **ONCE AGAIN**: *KEEP THE PRIVATE KEY SAFE*. You won't be able to download
+   * **ONCE AGAIN**: *KEEP THE PRIVATE KEY SAFE*. You won't be able to download
 	it again, although you can generate new ones though in case you lose the original.
 
-   **EVEN MORE IMPORTANT**: 
+   * **EVEN MORE IMPORTANT**: 
 	Make sure that you keep your credentials file OUTSIDE of the application tree 
 	that you distribute to production systems.
 	Highly recommend that you distribute using some container technology, e.g. we use
@@ -49,17 +49,17 @@ Replace &lt;*YOURDOMAIN*&gt; in any of the instructions below with your ACTUAL d
  
 3. add which services this new service account can actually play with at:
 
-	https://admin.google.com/YOURDOMAIN/ManageOauthClients
+   https://admin.google.com/YOURDOMAIN/ManageOauthClients
  
-   e.g. in our case we want to send out emails on behalf of our users, so we will add
+   For example, in our case we want to send out emails on behalf of our users, so we will add
    the gmail service as one of the APIs we can access through the service account.
 
-   3.1 Enter the client_id from the file you got as a result of Step 2. in the **"Client Name"** field,
+   * Enter the client_id from the file you got as a result of Step 2. in the **"Client Name"** field,
 
    	It's usually a 21 digit number e.g.: `103162732989648322554`.  
    	(*Please don't use this, I randomly typed it, don't know who it belongs to, USE YOUR OWN NUMBER.*)
 
-   3.2 and use *https://mail.google.com/* in the "**One or More API Scopes**" field.
+   * and use *https://mail.google.com/* in the "**One or More API Scopes**" field.
 
 
 4. Now to pass the credentials to pigeons-server, you can simply do something like:
