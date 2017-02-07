@@ -17,6 +17,8 @@ this situation, it is not documented.
 **IMPORTANT**: Remeber that this only applies when you have a domain-level account with
 google.
 
+Replace &lt;*YOURDOMAIN*&gt; in any of the instructions below with your ACTUAL domain. :-)
+
 ## The Steps to get going:
 
 1. set-up a service account in google using your domain administrator account,
@@ -36,4 +38,21 @@ google.
 
    	If you are using Docker of pigeons-server, put the key in its own volume.
  
-3.  
+3. add which services this new service account can actually play with at:
+
+	https://admin.google.com/<YOURDOMAIN>/ManageOauthClients
+ 
+   e.g. in our case we want to send out emails on behalf of our users, so we will add
+   the gmail service as one of the APIs we can access through the service account.
+
+   3.1 Enter the client_id from the file you got as a result of Step 2. in the **"Client Name"** field,
+
+   	It's usually a 21 digit number e.g.: `103162732989648322554`.  
+   	(*Please don't use this, I randomly typed it, don't know who it belongs to, USE YOUR OWN NUMBER.*)
+
+   3.2 and use *https://mail.google.com/* in the "**One or More API Scopes**" field.
+
+
+4. 
+
+
