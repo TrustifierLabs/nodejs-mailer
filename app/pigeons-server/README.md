@@ -30,17 +30,24 @@ Replace &lt;*YOURDOMAIN*&gt; in any of the instructions below with your ACTUAL d
 
 	[See how](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#delegatingauthority)
 
-	a public/private key pair is downloaded to your system.
+   this option will allow you to download a JSON or a P12 (legacy/deprecated) 
+   file. Please choose JSON! 
+   
+   Once a public/private key pair is downloaded to your system, keep that file safe.
 
-	**NOTE**: *KEEP THE PRIVATE KEY SAFE*. You won't be able to download
-	it again (you can generate new ones though in case you lose the original).
-	Make sure that you keep it out of the application tree.
+   **ONCE AGAIN**: *KEEP THE PRIVATE KEY SAFE*. You won't be able to download
+	it again, although you can generate new ones though in case you lose the original.
 
-   	If you are using Docker of pigeons-server, put the key in its own volume.
+   **EVEN MORE IMPORTANT**: 
+	Make sure that you keep your credentials file OUTSIDE of the application tree 
+	that you distribute to production systems.
+	Highly recommend that you distribute using some container technology, e.g. we use
+	Docker.  Put the credentials in its own VOLUME 
+	
  
 3. add which services this new service account can actually play with at:
 
-  https://admin.google.com/&lt;YOURDOMAIN&gt;/ManageOauthClients
+	https://admin.google.com/YOURDOMAIN/ManageOauthClients
  
    e.g. in our case we want to send out emails on behalf of our users, so we will add
    the gmail service as one of the APIs we can access through the service account.
@@ -53,6 +60,21 @@ Replace &lt;*YOURDOMAIN*&gt; in any of the instructions below with your ACTUAL d
    3.2 and use *https://mail.google.com/* in the "**One or More API Scopes**" field.
 
 
-4. 
+4. Now to pass the credentials to pigeons-mailer, you can simply do something like:
 
+```javascript
+	'use strict';
 
+	const MailTransporter = require('./lib/mail-transporter');
+
+	const mt = new MailTransporter({
+		// the json file that gmail sends you, which 
+		// contains the authentication tokens and the private key
+		// for 2LO xoauth
+		authFile: 'my-service-creds.json'
+	});
+
+```
+
+   Here `my-service-creds.json` is the JSON file that you got from google.
+   
