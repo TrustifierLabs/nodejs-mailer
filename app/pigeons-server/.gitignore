@@ -6,3 +6,4 @@ queue/*
 sent/*
 !queue/README.md
 !sent/README.md
+.tern-project
