@@ -2,3 +2,7 @@ node_modules/
 yarn.lock
 client_secret*.json
 *-creds.json
+queue/*
+sent/*
+!queue/README.md
+!sent/README.md
