@@ -9,6 +9,7 @@
   "dependencies": {
     "addressparser": "^1.0.1",
     "bunyan": "^1.8.5",
-    "nodemailer": "^3.0.0"
+    "nodemailer": "^3.0.0",
+    "watchr": "^3.0.1"
   }
 }
