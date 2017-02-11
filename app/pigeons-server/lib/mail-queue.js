@@ -27,18 +27,23 @@ module.exports = class MailQueue
 	constructor({ 
 		queueDir = __dirname + "/var/mail/queue", 
 		sentDir = __dirname + "/var/mail/sent",
+		rejectedDir = __dirname + "/var/mail/rejected",
 		maxListeners = 50,
 		authFile = "/etc/security/google-api/service-creds.json"
        	} = { 	queueDir: __dirname + "/var/mail/queue",
 		sentDir:  __dirname + "/var/mail/sent",
+		rejectedDir: __dirname + "/var/mail/rejected",
 		maxListeners: 50,
 		authFile: "/etc/security/google-api/service-creds.json"
        	})
 	{
 		this.queueDir = queueDir;
 		this.sentDir = sentDir;
+		this.rejectedDir = rejectedDir;
 		this.transporter = new MailTransporter({ authFile: authFile });
-		this.stalker = mkdir(this.queueDir)
+		mkdir(this.rejectedDir).catch((e) => { console.log("unable to create/access ", this.rejectedDir, ":", e); });
+		this.stalker =
+			mkdir(this.queueDir)
 			.then((path) => {
 				var s = new watchr.Stalker(path);
 				s.setMaxListeners(maxListeners);
@@ -55,7 +60,7 @@ module.exports = class MailQueue
 					throw new Error(err);
 				}
 			});
-		}).catch((e) => { this.log("problems starting the watcher", e); });
+		}).catch((e) => { this.log("problems starting the watcher", e); throw new Error(e); });
 	}
 
 	stop() {
@@ -70,13 +75,23 @@ module.exports = class MailQueue
 		if(!emailFileFilter.test(fullPath))
 			return; 
 		
+		let basename = fullPath.substr(fullPath.lastIndexOf('/')+1);
 		return this.transporter.processMailFile(fullPath).then((result) => {
 			console.log("mail processing result", result);
-			let basename = fullPath.substr(fullPath.lastIndexOf('/')+1);
 			fs.rename(fullPath, this.sentDir + '/' + basename, (err) => {
 				if (err) throw new Error(err);
 			});
-		}).catch((error)=> { throw new Error(error) });
+		}).catch((error)=> { 
+			if(error == "MalformedEmail") {
+				fs.rename(fullPath, this.rejectedDir + '/' + basename, (err) => {
+					if (err) throw new Error(err);
+					console.log(`malformed email: moving ${fullPath} to ${this.rejectedDir}`);
+				});
+			}
+			else {
+				throw error;
+			}
+		});
 	}
 
 	log(...any) {

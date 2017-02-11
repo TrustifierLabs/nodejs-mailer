@@ -20,9 +20,22 @@ const addressParser = require('addressparser');
 //	"client_x509_cert_url": "....",
 //
 // }
+//
+
 const readJSONFile = (filename, type='utf8') => 
 new Promise((resolve, reject) => fs.readFile(filename, type, (err, data) => {
-	return err ? reject(err) : resolve(JSON.parse(data));
+	if(err) {
+		reject(err);
+	}
+	else {
+		try {
+			let json = JSON.parse(data);
+			resolve(json);
+		}
+		catch(e) {
+			reject("MalformedEmail");
+		}
+	}
 }));
 
 const readSecrets = readJSONFile;
@@ -102,8 +115,7 @@ module.exports = class MailTransporter {
 				error ? reject(error) : resolve(filename);
 			});
 		})
-		.then((filename) => { return readJSONFile(filename); })
-		.then(this.sendMail.bind(this))
-		.catch((error) => { throw new Error("processMailFile error:", error); });
+		.then(readJSONFile)
+		.then(this.sendMail.bind(this));
 	}
 }
