@@ -1,12 +1,15 @@
 {
-  "name": "happy-mailer",
-  "version": "1.0.0",
+  "name": "nodejs-mailer",
+  "version": "0.1.0",
   "description": "A simple mass-mailer",
   "main": "index.js",
-  "repository": "https://github.com/TrustifierLabs/node-happy-mailer",
+  "repository": "https://github.com/TrustifierLabs/nodejs-mailer",
   "author": "Ahmed Masud <ahmed.masud@trustifier.com>",
   "license": "MIT",
   "dependencies": {
-    "nodemailer": "^3.0.0"
+    "addressparser": "^1.0.1",
+    "bunyan": "^1.8.5",
+    "nodemailer": "^3.0.0",
+    "watchr": "^3.0.1"
   }
 }

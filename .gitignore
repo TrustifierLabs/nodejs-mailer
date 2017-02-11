@@ -1,1 +1,4 @@
 id_rsa.pub
+.*.swp
+creds/*
+!creds/README.md
