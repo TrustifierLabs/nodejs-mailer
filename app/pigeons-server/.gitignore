@@ -4,8 +4,10 @@ client_secret*.json
 *-creds.json
 queue/*
 sent/*
+rejected/*
 !queue/README.md
 !sent/README.md
+!rejected/README.md
 .tern-project
 
 # Created by https://www.gitignore.io/api/node
