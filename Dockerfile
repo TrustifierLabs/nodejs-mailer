@@ -16,3 +16,7 @@ RUN /srv/start.sh ${USERNAME}
 
 VOLUME [ "/app" ]
 VOLUME [ "/etc/security/google-api" ]
+
+USER pigeons
+WORKDIR /home/pigeons/app/pigeons-server
+ENTRYPOINT [ "/home/pigeons/app/pigeons-server/start.sh" ]
