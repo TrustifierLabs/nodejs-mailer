@@ -2,16 +2,12 @@
 
 const MailTransporter = require('./lib/mail-transporter');
 
+// the json file that gmail sends you, which 
+// contains the authentication tokens and the private key
+// for 2LO xoauth
 const mt = new MailTransporter({
-	// the json file that gmail sends you, which 
-	// contains the authentication tokens and the private key
-	// for 2LO xoauth
 	authFile: '/etc/security/google-api/service-creds.json',
 });
 
-mt.sendMail({
-	from: '"Ahmed Masud" <ahmed.masud@trustifier.com>', 
-	to: "ahmed.masud@trustifier.com", 
-	subject: "hi there you!",
-	text: "well how goes it? -- don't forget to write back"
-  });
+
+mt.processMailFile("./queue/email-0000001.json");
