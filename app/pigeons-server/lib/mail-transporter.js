@@ -77,16 +77,16 @@ module.exports = class MailTransporter {
 
 		mailOptions.auth = { user: user };
 
+		return this.transport.then((mt) => {
+			return mt.sendMail(mailOptions, (error, info) => {
+				if(error) {
+					return console.log(error);
 				}
-				transporter.sendMail(mailOptions, (error, info) => {
-					if(error) {
-						return console.log(error);
-					}
-					console.log('Message %s sent: %s', info.messageId, info.response);
-				});
+				console.log('Message %s sent: %s', info.messageId, info.response);
+				return info;
 			});
+		});
 
-		return this;
 	}
 
 	processMailFile(filename) {
