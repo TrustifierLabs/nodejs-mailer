@@ -5,6 +5,7 @@ client_secret*.json
 queue/*
 sent/*
 rejected/*
+template.json
 !queue/README.md
 !sent/README.md
 !rejected/README.md
