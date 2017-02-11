@@ -92,4 +92,21 @@ module.exports = class MailTransporter {
 
 		return this;
 	}
+
+	processMailFile(filename) {
+		if(!filename) throw new Error("you must provide a filename");
+		return new Promise((resolve, reject) => {
+			fs.access(filename, fs.constants.R_OK, (error) => {
+				error ? reject(error) : resolve(filename);
+			});
+		})
+		.then((filename) => {
+			return readJSONFile(filename);
+		})
+		.then((options) => { 
+			console.log(options);
+			return this.sendMail(options);
+		})
+		.catch((error) => { throw new Error("processMailFile error:", error); });
+	}
 }
