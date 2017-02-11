@@ -15,7 +15,7 @@ const mkdir = (path) =>
 					return err ? reject(err) : resolve(path);
 				});
 			}
-			else if(!error && stats.isDirectory()) { console.log("resolved path:", path); resolve(path); }
+			else if(!error && stats.isDirectory()) { resolve(path); }
 		       	else {
 				reject(error);
 			}
