@@ -20,10 +20,12 @@ const addressParser = require('addressparser');
 //	"client_x509_cert_url": "....",
 //
 // }
-const readSecrets = (filename, type='utf8') => 
+const readJSONFile = (filename, type='utf8') => 
 	new Promise((resolve, reject) => fs.readFile(filename, type, (err, data) => {
 		return err ? reject(err) : resolve(JSON.parse(data));
 	}));
+
+const readSecrets = readJSONFile;
 
 const authenticate = (authObject) => 
 	new Promise((resolve, reject) => {
@@ -44,6 +46,8 @@ const authenticate = (authObject) =>
 	});
 
 module.exports = class MailTransporter {
+
+
 	constructor({authFile, user} = { authFile: null, user: null }) {
 		if(typeof authFile == 'undefined') throw new Error("you must specify an authentication file authFile:<filename>");
 		this.authFile = authFile;
@@ -56,7 +60,6 @@ module.exports = class MailTransporter {
 					throw new Error(reason);
 				});
 	}
-
 
 	sendMail(mailOptions = {}){
 			if (typeof this.transport == 'undefined') {
