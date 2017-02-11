@@ -1,0 +1,12 @@
+{
+  "name": "scribbler",
+  "version": "1.0.0",
+  "description": "A simple email template generator for use with pigeons-server",
+  "main": "index.js",
+  "repository": "https://github.com/TrustifierLabs/scribbler",
+  "author": "Ahmed Masud <ahmed.masud@trustifier.com>",
+  "license": "MIT",
+  "dependencies": {
+    "handlebars": "^4.0.6"
+  }
+}
