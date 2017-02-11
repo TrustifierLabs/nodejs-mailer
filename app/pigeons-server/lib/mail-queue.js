@@ -10,7 +10,7 @@ const emailFileFilter = /\/email-[0-9a-fA-F]+\.json$/i;
 const mkdir = (path) => 
 	new Promise((resolve, reject) => {
 		fs.stat(path, (error, stats) => {
-			if (error && error.code == 'EEXIST') {
+			if (error && error.code == 'ENOENT') {
 				fs.mkdir(path, (err) => { 
 					return err ? reject(err) : resolve(path);
 				});
