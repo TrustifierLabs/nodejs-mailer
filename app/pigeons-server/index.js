@@ -5,4 +5,4 @@ const MailQueue = require('./lib/mail-queue.js');
 
 let mq = new MailQueue({queueDir: "./queue", sentDir: "./sent" });
 
-
+mq.start();

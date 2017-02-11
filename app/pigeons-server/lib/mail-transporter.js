@@ -21,29 +21,28 @@ const addressParser = require('addressparser');
 //
 // }
 const readJSONFile = (filename, type='utf8') => 
-	new Promise((resolve, reject) => fs.readFile(filename, type, (err, data) => {
-		return err ? reject(err) : resolve(JSON.parse(data));
-	}));
+new Promise((resolve, reject) => fs.readFile(filename, type, (err, data) => {
+	return err ? reject(err) : resolve(JSON.parse(data));
+}));
 
 const readSecrets = readJSONFile;
 
-const authenticate = (authObject) => 
-	new Promise((resolve, reject) => {
-		try {
-			let transport = nodeMailer.createTransport({
-				service: 'Gmail',
-				auth: {
-					type: 'OAuth2',
-			    		serviceClient: authObject.client_email,
-					privateKey: authObject.private_key,
-				}
-			});
-			resolve(transport);
-		} catch(error) {
-			reject(error);
-		}
-		
-	});
+const authenticate = (authObject) => new Promise((resolve, reject) => {
+	try {
+		let transport = nodeMailer.createTransport({
+			service: 'Gmail',
+		    auth: {
+			    type: 'OAuth2',
+		    serviceClient: authObject.client_email,
+		    privateKey: authObject.private_key,
+		    }
+		});
+		resolve(transport);
+	} catch(error) {
+		reject(error);
+	}
+
+});
 
 module.exports = class MailTransporter {
 
@@ -53,60 +52,58 @@ module.exports = class MailTransporter {
 		this.authFile = authFile;
 		this.transport = 
 			Promise.resolve(this.authFile)
-				.then(readSecrets)
-				.then(authenticate)
-				.catch(reason => { 
-					console.log("connection failed:", reason);
-					throw new Error(reason);
-				});
+			.then(readSecrets)
+			.then(authenticate)
+			.catch(reason => { 
+				console.log("connection failed:", reason);
+				throw new Error(reason);
+			});
 	}
 
-	sendMail(mailOptions = {}){
-			if (typeof this.transport == 'undefined') {
-				throw new Error("You need to connect to the transporter before you can send mail");
-			}
-			if ( typeof mailOptions.from == 'undefined' ) {
-				throw new Error("Who am I sending this email as? You need to use from:");
-			}
+	sendMail(mailOptions = {}) {
+		if (typeof this.transport == 'undefined') {
+			throw new Error("You need to connect to the transporter before you can send mail");
+		}
+		if ( typeof mailOptions.from == 'undefined' ) {
+			throw new Error("Who am I sending this email as? You need to use from:");
+		}
 
-			let user = (mailOptions.auth? mailOptions.auth.user : mailOptions.user) 
-				|| addressParser(mailOptions.from)[0].address || undefined;
+		let user = (mailOptions.auth? mailOptions.auth.user : mailOptions.user) 
+			|| addressParser(mailOptions.from)[0].address || undefined;
 
-			if ( typeof user == 'undefined' ) {
-				throw new Error("Either from: has to have a valid authenticatable account, or specify auth.user:");
-			}
+		if ( typeof user == 'undefined' ) {
+			throw new Error("Either from: has to have a valid authenticatable account, or specify auth.user:");
+		}
 
-			mailOptions.auth = { user: user };
+		mailOptions.auth = { user: user };
 
-			this.transport.then((transporter, reject) => {
-				if(typeof reject != 'undefined') { 
-					throw new Error(reject);
-				}
-				transporter.sendMail(mailOptions, (error, info) => {
+		return this.transport.then(
+			(mt) => new Promise((resolve, reject) => {
+				mt.sendMail(mailOptions, (error, info) => {
 					if(error) {
-						return console.log(error);
+						reject(error);
 					}
-					console.log('Message %s sent: %s', info.messageId, info.response);
+					resolve(info);
 				});
+			}))
+			.catch((mtError) => { 
+				console.log('Problem creating transport:', mtError);
+				throw new Error(mtError);
 			});
-
-		return this;
 	}
 
 	processMailFile(filename) {
-		if(!filename) throw new Error("you must provide a filename");
+
+		if(!filename) 
+			throw new Error("you must provide a filename");
+
 		return new Promise((resolve, reject) => {
 			fs.access(filename, fs.constants.R_OK, (error) => {
 				error ? reject(error) : resolve(filename);
 			});
 		})
-		.then((filename) => {
-			return readJSONFile(filename);
-		})
-		.then((options) => { 
-			console.log(options);
-			return this.sendMail(options);
-		})
+		.then((filename) => { return readJSONFile(filename); })
+		.then(this.sendMail.bind(this))
 		.catch((error) => { throw new Error("processMailFile error:", error); });
 	}
 }
