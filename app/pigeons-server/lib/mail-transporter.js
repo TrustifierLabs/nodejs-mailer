@@ -77,16 +77,19 @@ module.exports = class MailTransporter {
 
 		mailOptions.auth = { user: user };
 
-		return this.transport.then((mt) => {
-			return mt.sendMail(mailOptions, (error, info) => {
-				if(error) {
-					return console.log(error);
-				}
-				console.log('Message %s sent: %s', info.messageId, info.response);
-				return info;
+		return this.transport.then(
+			(mt) => new Promise((resolve, reject) => {
+				mt.sendMail(mailOptions, (error, info) => {
+					if(error) {
+						reject(error);
+					}
+					resolve(info);
+				});
+			}))
+			.catch((mtError) => { 
+				console.log('Problem creating transport:', mtError);
+				throw new Error(mtError);
 			});
-		});
-
 	}
 
 	processMailFile(filename) {
