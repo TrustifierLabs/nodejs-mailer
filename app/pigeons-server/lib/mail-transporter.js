@@ -102,13 +102,8 @@ module.exports = class MailTransporter {
 				error ? reject(error) : resolve(filename);
 			});
 		})
-		.then((filename) => {
-			return readJSONFile(filename);
-		})
-		.then((options) => { 
-			console.log(options);
-			return this.sendMail(options);
-		})
+		.then((filename) => { return readJSONFile(filename); })
+		.then(this.sendMail.bind(this))
 		.catch((error) => { throw new Error("processMailFile error:", error); });
 	}
 }
