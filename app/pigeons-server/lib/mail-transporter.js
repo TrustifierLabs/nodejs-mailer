@@ -90,7 +90,10 @@ module.exports = class MailTransporter {
 	}
 
 	processMailFile(filename) {
-		if(!filename) throw new Error("you must provide a filename");
+
+		if(!filename) 
+			throw new Error("you must provide a filename");
+
 		return new Promise((resolve, reject) => {
 			fs.access(filename, fs.constants.R_OK, (error) => {
 				error ? reject(error) : resolve(filename);
