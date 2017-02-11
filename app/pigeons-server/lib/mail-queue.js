@@ -27,9 +27,11 @@ module.exports = class MailQueue
 	constructor({ 
 		queueDir = __dirname + "/var/mail/queue", 
 		sentDir = __dirname + "/var/mail/sent",
+		maxListeners = 50,
 		authFile = "/etc/security/google-api/service-creds.json"
        	} = { 	queueDir: __dirname + "/var/mail/queue",
 		sentDir:  __dirname + "/var/mail/sent",
+		maxListeners: 50,
 		authFile: "/etc/security/google-api/service-creds.json"
        	})
 	{
@@ -38,12 +40,11 @@ module.exports = class MailQueue
 		this.transporter = new MailTransporter({ authFile: authFile });
 		this.stalker = mkdir(this.queueDir)
 			.then((path) => {
-				var w = watchr.open(path, this.process.bind(this), (err) => {
-					if(err) throw new Error(err);
-				});
-				return w;
+				var s = new watchr.Stalker(path);
+				s.setMaxListeners(maxListeners);
+				s.on('change', this.process.bind(this));
+				return s;
 			})
-			.then((w) => w)
 			.catch((e) => this.log("problems getting a stalker:", e));
 	}
 
