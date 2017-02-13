@@ -1,6 +1,6 @@
 {
   "name": "scribbler",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "A simple email template generator for use with pigeons-server",
   "main": "index.js",
   "repository": "https://github.com/TrustifierLabs/scribbler",
