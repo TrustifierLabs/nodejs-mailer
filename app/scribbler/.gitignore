@@ -1,6 +1,10 @@
 
 # Created by https://www.gitignore.io/api/node
 
+### Contacts.json ###
+
+contacts.json
+
 ### Node ###
 # Logs
 logs
@@ -58,3 +62,4 @@ jspm_packages
 
 
 # End of https://www.gitignore.io/api/node
+
