@@ -2,8 +2,12 @@
 # Created by https://www.gitignore.io/api/node
 
 ### Contacts.json ###
-
 contacts.json
+
+### Templates
+
+templates/
+!templates/samples/**
 
 ### Node ###
 # Logs
