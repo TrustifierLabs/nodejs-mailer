@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const Promisify = require('es6-promisify');
 const HandleBars = require('handlebars');
+const md5 = require('md5');
 
 const readFile = Promisify(fs.readFile);
 const writeFile = Promisify(fs.writeFile);
@@ -140,7 +141,9 @@ class Scribbler {
 			let pList = [];
 			for(let c of this.contacts) {
 				index++;
-				let mailFile = "email-" + (index + Date.now()).toString(16) + ".json";
+				c.nonce = (index + Date.now()).toString(16);
+				let mailFile = "email-" + c.nonce + ".json";
+				c.emailHash = md5(c.email);
 				let envelope = {
 					from: from,
 					to: `"${c.firstName} ${c.lastName}" <${c.email}>`,
