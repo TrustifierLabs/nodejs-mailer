@@ -22,6 +22,8 @@ class Scribbler {
 
 		this.queueDir = queueDir;
 
+		this.contactsFile = contactsFile;
+
 		/** 
 		 * Array of contacts to scribble to
 		 * @type {Array}
@@ -70,7 +72,8 @@ class Scribbler {
 	 * @todo add the documentation file to github.
 	 * @returns {Promise<Array>} - Promises a filled in contactList
 	 */
-	loadContacts(contactsFile = "contacts.json") {
+	loadContacts(contactsFile) {
+		contactsFile = contactsFile || this.contactsFile;
 		return jr.readJSONFile(contactsFile).then((data) => {
 			this.contacts = data;
 			if(this.contacts instanceof Object) {
@@ -144,9 +147,11 @@ class Scribbler {
 				c.nonce = (index + Date.now()).toString(16);
 				let mailFile = "email-" + c.nonce + ".json";
 				c.emailHash = md5(c.email);
+				let recipient = c.email;
+				if(c.name) { recipient = `"${c.name}" <${c.email}>`; }
 				let envelope = {
 					from: from,
-					to: `"${c.firstName} ${c.lastName}" <${c.email}>`,
+					to: recipient,
 					subject: textSubject,
 					text: text.template(c),
 					html: html.template(c)
