@@ -5,5 +5,9 @@
   "main": "index.js",
   "repository": "https://github.com/TrustifierLabs/pige-a-matic.git",
   "author": "Ahmed Masud <ahmed.masud@trustifier.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "es6-promisify": "^5.0.0"
+  }
 }
