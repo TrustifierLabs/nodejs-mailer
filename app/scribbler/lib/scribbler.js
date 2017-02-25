@@ -4,6 +4,7 @@ const path = require('path');
 const Promisify = require('es6-promisify');
 const HandleBars = require('handlebars');
 const md5 = require('md5');
+const _ = require('lodash');
 
 const readFile = Promisify(fs.readFile);
 const writeFile = Promisify(fs.writeFile);
@@ -21,6 +22,8 @@ class Scribbler {
 		if(!queueDir) throw new Error("You must the queue directory");
 
 		this.queueDir = queueDir;
+
+		this.contactsFile = contactsFile;
 
 		/** 
 		 * Array of contacts to scribble to
@@ -65,12 +68,13 @@ class Scribbler {
 	}
 	/**
 	 * Load an email-list from a json file.
-	 * @param {string} [contactList="email-list.json"] - JSON file containing email list. 
+	 * @param {string} [contactsFile ="email-list.json"] - JSON file containing email list. 
 	 * @see https://github.com/TrustifierLabs/nodejs-mailer/docs/scribbler/email-list.md
 	 * @todo add the documentation file to github.
 	 * @returns {Promise<Array>} - Promises a filled in contactList
 	 */
-	loadContacts(contactsFile = "contacts.json") {
+	loadContacts({ contactsFile = null, filter =  null } = { contactsFile: null, filter: null } ) {
+		contactsFile = contactsFile || this.contactsFile;
 		return jr.readJSONFile(contactsFile).then((data) => {
 			this.contacts = data;
 			if(this.contacts instanceof Object) {
@@ -144,9 +148,14 @@ class Scribbler {
 				c.nonce = (index + Date.now()).toString(16);
 				let mailFile = "email-" + c.nonce + ".json";
 				c.emailHash = md5(c.email);
+				let recipient = c.email;
+				if(c.name) { recipient = `"${c.name}" <${c.email}>`; }
+				if(c.firstName.length < 3) {
+					c.salutation = "";
+				}
 				let envelope = {
 					from: from,
-					to: `"${c.firstName} ${c.lastName}" <${c.email}>`,
+					to: recipient,
 					subject: textSubject,
 					text: text.template(c),
 					html: html.template(c)

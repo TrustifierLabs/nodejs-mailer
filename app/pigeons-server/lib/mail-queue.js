@@ -5,6 +5,7 @@ const watchr = require('watchr');
 const MailTransporter = require('./mail-transporter');
 
 const emailFileFilter = /\/email-[0-9a-fA-F]+\.json$/i;
+const winston = require('winston');
 
 
 const mkdir = (path) => 
@@ -40,8 +41,15 @@ module.exports = class MailQueue
 		this.queueDir = queueDir;
 		this.sentDir = sentDir;
 		this.rejectedDir = rejectedDir;
-		this.transporter = new MailTransporter({ authFile: authFile });
-		mkdir(this.rejectedDir).catch((e) => { console.log("unable to create/access ", this.rejectedDir, ":", e); });
+		this.logger = new (winston.Logger);
+		this.logger.add(winston.transports.File, 
+			{ filename: 'logs/mail-queue.log', handleExceptions: true, humanReadableUnhandledException: true });
+		this.logger.add(winston.transports.Console, 
+			{ handleExceptions: true, humanReadableUnhandledException: true });
+		this.log("Logging Ready\n");
+
+		this.transporter = new MailTransporter({ authFile: authFile, logger: this });
+		mkdir(this.rejectedDir).catch((e) => { console.error("unable to create/access ", this.rejectedDir, ":", e); });
 		this.stalker =
 			mkdir(this.queueDir)
 			.then((path) => {
@@ -50,7 +58,7 @@ module.exports = class MailQueue
 				s.on('change', this.process.bind(this));
 				return s;
 			})
-			.catch((e) => this.log("problems getting a stalker:", e));
+			.catch((e) => this.error("problems getting a stalker:", e));
 	}
 
 	start() {
@@ -60,7 +68,7 @@ module.exports = class MailQueue
 					throw new Error(err);
 				}
 			});
-		}).catch((e) => { this.log("problems starting the watcher", e); throw new Error(e); });
+		}).catch((e) => { this.error("problems starting the watcher", e); throw new Error(e); });
 	}
 
 	stop() {
@@ -77,7 +85,7 @@ module.exports = class MailQueue
 		
 		let basename = fullPath.substr(fullPath.lastIndexOf('/')+1);
 		return this.transporter.processMailFile(fullPath).then((result) => {
-			console.log("mail processing result", result);
+			this.log("mail processing result", result);
 			fs.rename(fullPath, this.sentDir + '/' + basename, (err) => {
 				if (err) throw new Error(err);
 			});
@@ -85,7 +93,7 @@ module.exports = class MailQueue
 			if(error == "MalformedEmail") {
 				fs.rename(fullPath, this.rejectedDir + '/' + basename, (err) => {
 					if (err) throw new Error(err);
-					console.log(`malformed email: moving ${fullPath} to ${this.rejectedDir}`);
+					this.error(`malformed email: moving ${fullPath} to ${this.rejectedDir}`);
 				});
 			}
 			else {
@@ -95,6 +103,10 @@ module.exports = class MailQueue
 	}
 
 	log(...any) {
-		console.log.call(this, "logging:", any);
+		this.logger.info.call(this, any);
+	}
+
+	error(...any) {
+		this.logger.error.call(this, any);
 	}
 };

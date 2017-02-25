@@ -1,18 +1,3 @@
-node_modules/
-yarn.lock
-client_secret*.json
-*-creds.json
-queue/*
-sent/*
-rejected/*
-email-*.json
-template.json
-logs/
-!logs/README.md
-!queue/README.md
-!sent/README.md
-!rejected/README.md
-.tern-project
 
 # Created by https://www.gitignore.io/api/node
 
