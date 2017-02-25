@@ -60,15 +60,16 @@ const authenticate = (authObject) => new Promise((resolve, reject) => {
 module.exports = class MailTransporter {
 
 
-	constructor({authFile, user} = { authFile: null, user: null }) {
+	constructor({authFile, user, logger} = { authFile: null, user: null, logger: null }) {
 		if(typeof authFile == 'undefined') throw new Error("you must specify an authentication file authFile:<filename>");
 		this.authFile = authFile;
+		this.logger = logger || console;
 		this.transport = 
 			Promise.resolve(this.authFile)
 			.then(readSecrets)
 			.then(authenticate)
 			.catch(reason => { 
-				console.log("connection failed:", reason);
+				this.logger.log("connection failed:", reason);
 				throw new Error(reason);
 			});
 	}
@@ -100,7 +101,7 @@ module.exports = class MailTransporter {
 				});
 			}))
 			.catch((mtError) => { 
-				console.log('Problem creating transport:', mtError);
+				this.logger.log('Problem creating transport:', mtError);
 				throw new Error(mtError);
 			});
 	}
