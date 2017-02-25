@@ -10,6 +10,7 @@
     "es6-promisify": "^5.0.0",
     "googleapis": "^16.1.0",
     "handlebars": "^4.0.6",
+    "lodash": "^4.17.4",
     "md5": "^2.2.1"
   }
 }
